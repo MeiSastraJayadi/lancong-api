@@ -1,9 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
-from fastapi.routing import APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from sqlalchemy import except_
 from sqlalchemy.orm import Session
 from model.user_model import TokenData, UserRegister, UserInDB
 
@@ -12,10 +10,6 @@ from jose import JWTError, jwt
 
 import os
 
-user_router = APIRouter(
-        prefix="/user",
-        tags=["User"]
-        )
 
 SECRET_KEY = str(os.getenv("SECRET_KEY"))
 ALGORITHM = "HS256"

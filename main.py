@@ -4,25 +4,17 @@ from sqlalchemy.orm import Session
 
 from model import database_model, user_model, route_place_model
 from repository.connection import engine, SessionLocal
+from deliver.user import user_router
 
-import os
 
 database_model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 load_dotenv()
 
-def get_db() : 
-    db = SessionLocal()
-    try : 
-        yield db
-    finally : 
-        db.close()
+
+# app.add_route("/", user_router)
 
 @app.get("/")
 def hello() : 
     return "Hello World"
-
-url = os.getenv('DATABASE_URL')
-print(url)
-
