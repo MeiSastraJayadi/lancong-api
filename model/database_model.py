@@ -17,13 +17,15 @@ class User(Base) :
     books = relationship("Book", back_populates="users")
     payments = relationship("Payment", back_populates="users")
 
-
 class Place(Base) : 
     __tablename__ = "places"
     id = Column(Integer, primary_key=True, index=True)
     city = Column(String)
     zip_code = Column(String)
     url_coordinate = Column(String)
+    
+    routes = relationship("Route", back_populates="place1")
+    routes2 = relationship("Route", back_populates="place2")
 
 class Route(Base) : 
     __tablename__ = "routes"
@@ -34,6 +36,9 @@ class Route(Base) :
     duration = Column(Integer)
 
     books = relationship("Book", back_populates="routes")
+    place1 = relationship("Place", back_populates="routes")
+    place2 = relationship("Place", back_populates="routes2")
+
 
 class Book(Base) : 
     __tablename__ = "books"
@@ -52,9 +57,5 @@ class Payment(Base) :
     book_date = Column(DateTime)
 
     users = relationship("User", back_populates="payments")
-
-
-
-
 
 
