@@ -4,6 +4,7 @@ from model.database_model import User
 
 class UserRegister(BaseModel) : 
     name : str
+    username : str
     email : str
     password : str
     phone : str
@@ -15,12 +16,10 @@ class UserRegister(BaseModel) :
     class Config :
         orm_mode = True
 
-class Login(BaseModel) : 
-    email : str
-    password : str
 
 class UserDetail(BaseModel) : 
     name : str
+    username : str
     email : str
     phone : str
     is_male : bool
@@ -36,7 +35,7 @@ class Token(BaseModel) :
     token_type : str
 
 class TokenData(BaseModel) : 
-    email : str | None = None
+    username : str | None = None
 
 class UserInDB(UserDetail) : 
     hashed_password : str

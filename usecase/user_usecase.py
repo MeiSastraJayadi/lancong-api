@@ -17,7 +17,7 @@ ALGORITHM = "HS256"
 EXP = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto") 
-oauth2_schemes = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_schemes = OAuth2PasswordBearer(tokenUrl="/user/login")
 
 def verify_password(hashed_password:str, plain_password:str) -> bool : 
     return pwd_context.verify(plain_password, hashed_password)
@@ -25,10 +25,8 @@ def verify_password(hashed_password:str, plain_password:str) -> bool :
 def get_password_hashed(password:str) -> str :
     return pwd_context.hash(password)
 
-def get_user(db, email:str) : 
-    if email in db : 
-        user_dict = db[email]
-        return UserInDB(**user_dict)
+def get_user(db, username:str) : 
+    return db.query(User).filter(User.username == username).first()
 
 def create_access_token(data : dict, expires_delta : timedelta | None = None) : 
     to_encode = data.copy()
@@ -40,7 +38,7 @@ def create_access_token(data : dict, expires_delta : timedelta | None = None) :
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)]) : 
+async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)], db : Session) : 
     credential_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 
             detail="Could not validated credential",
@@ -48,18 +46,23 @@ async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)]) :
             )
     try : 
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-        email  = payload.get("sub")
-        if email is None : 
+        username = payload.get("sub")
+        if username is None : 
             raise credential_exception
-        token_data = TokenData(email=email)
+        token_data = TokenData(username=username)
     except JWTError : 
         raise credential_exception
+    user = get_user(db, username)
+    if user is None : 
+        raise credential_exception
+    return user
 
 def create_user(db : Session, user : UserRegister) : 
     hashed_password = get_password_hashed(user.password)
     user.password = hashed_password
     user_db = User(
             name = user.name, 
+            username = user.username,
             email = user.email,
             hashed_password = user.password,
             phone = user.phone, 
@@ -74,5 +77,25 @@ def create_user(db : Session, user : UserRegister) :
     db.commit()
     db.refresh(user_db)
     return user_db 
+
+def authenticate_user(username: str, password : str, db : Session) : 
+    user = get_user(db, username)
+    if not user : 
+        return False
+    if not verify_password(user.hashed_password, password) : 
+        return False
+    return user
+
+def login_for_token(form_data : Annotated[OAuth2PasswordRequestForm, Depends()], db : Session) : 
+    user = authenticate_user(form_data.username, form_data.password, db) 
+    if not user : 
+        raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password", 
+                headers={"WWW-Authenticate":"Bearer"}
+                )
+    access_token_expire = timedelta(minutes=EXP)
+    access_token = create_access_token(data={"sub" : user.username}, expires_delta=access_token_expire)
+    return {"access_token" : access_token, "token_type" : "bearer"}
 
 
