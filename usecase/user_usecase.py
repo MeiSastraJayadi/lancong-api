@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from model.database_model import User
 from model.user_model import TokenData, UserRegister, UserInDB
 
 from passlib.context import CryptContext
@@ -57,9 +58,20 @@ async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)]) :
 def create_user(db : Session, user : UserRegister) : 
     hashed_password = get_password_hashed(user.password)
     user.password = hashed_password
-    db.add(user)
+
+    user_db = User(
+            name = user.name, 
+            email = user.email,
+            hashed_password = user.password,
+            phone = user.phone, 
+            is_male = user.is_male,
+            age = user.age, 
+            card_id = user.card_id, 
+            nation = user.nation
+            )
+    db.add(user_db)
     db.commit()
-    db.refresh(user)
-    return user
+    db.refresh(user_db)
+    return user_db 
 
 
