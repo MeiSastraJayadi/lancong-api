@@ -58,7 +58,6 @@ async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)]) :
 def create_user(db : Session, user : UserRegister) : 
     hashed_password = get_password_hashed(user.password)
     user.password = hashed_password
-
     user_db = User(
             name = user.name, 
             email = user.email,
@@ -69,6 +68,8 @@ def create_user(db : Session, user : UserRegister) :
             card_id = user.card_id, 
             nation = user.nation
             )
+
+    print(user_db)
     db.add(user_db)
     db.commit()
     db.refresh(user_db)

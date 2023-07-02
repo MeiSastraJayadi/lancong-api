@@ -24,8 +24,8 @@ class Place(Base) :
     zip_code = Column(String(50))
     url_coordinate = Column(String(400))
     
-    routes = relationship("Route", back_populates="place1")
-    routes2 = relationship("Route", back_populates="place2")
+    # routes = relationship("Route", back_populates="place1")
+    # routes2 = relationship("Route", back_populates="place2")
 
 class Route(Base) : 
     __tablename__ = "routes"
@@ -36,8 +36,8 @@ class Route(Base) :
     duration = Column(Integer)
 
     books = relationship("Book", back_populates="routes")
-    place1 = relationship("Place", back_populates="routes")
-    place2 = relationship("Place", back_populates="routes2")
+    place1 = relationship("Place", foreign_keys=[place1_id])
+    place2 = relationship("Place", foreign_keys=[place2_id])
 
 class Payment(Base) : 
     __tablename__ = "payments"

@@ -1,3 +1,4 @@
+import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from sqlalchemy.orm import Session
@@ -26,4 +27,6 @@ def place() :
     return "This is place"
 
 app.include_router(user_router)
+
+
 
