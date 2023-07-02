@@ -14,4 +14,7 @@ class RoutePlace(BaseModel) :
     place2 : Place
     price : int
     duration : int
+    
+    class Config:
+        orm_mode = True
 
