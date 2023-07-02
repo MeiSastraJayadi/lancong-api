@@ -12,6 +12,9 @@ class UserRegister(BaseModel) :
     card_id : str
     nation : str 
 
+    class Config :
+        orm_mode = True
+
 class Login(BaseModel) : 
     email : str
     password : str

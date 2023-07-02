@@ -4,6 +4,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.routing import APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy import except_
+from sqlalchemy.orm import Session
 from model.user_model import TokenData, UserRegister, UserInDB
 
 from passlib.context import CryptContext
@@ -59,6 +60,12 @@ async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)]) :
     except JWTError : 
         raise credential_exception
 
-@user_router.post("/register")
-def user_register(user : UserRegister) : 
-    return ""
+def create_user(db : Session, user : UserRegister) : 
+    hashed_password = get_password_hashed(user.password)
+    user.password = hashed_password
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
