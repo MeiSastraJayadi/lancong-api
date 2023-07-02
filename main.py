@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from sqlalchemy.orm import Session
 
-from model import database_model, user_model, place_model, route_model
+from model import database_model, user_model, route_place_model
 from repository.connection import engine, SessionLocal
 
 import os

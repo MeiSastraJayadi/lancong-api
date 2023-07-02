@@ -5,24 +5,24 @@ from repository.connection import Base
 class User(Base) : 
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    email = Column(String, unique=True)
-    hashed_password = Column(String)
-    phone = Column(String)
+    name = Column(String(90))
+    email = Column(String(60), unique=True)
+    hashed_password = Column(String(300))
+    phone = Column(String(20))
     is_male = Column(Boolean, default=False)
     age = Column(Integer)
-    card_id = Column(String)
-    nation = Column(String)
+    card_id = Column(String(30))
+    nation = Column(String(30))
 
     books = relationship("Book", back_populates="users")
 
 class Place(Base) : 
     __tablename__ = "places"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    city = Column(String)
-    zip_code = Column(String)
-    url_coordinate = Column(String)
+    name = Column(String(30))
+    city = Column(String(30))
+    zip_code = Column(String(50))
+    url_coordinate = Column(String(400))
     
     routes = relationship("Route", back_populates="place1")
     routes2 = relationship("Route", back_populates="place2")
