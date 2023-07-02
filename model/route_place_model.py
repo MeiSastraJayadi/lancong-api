@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from .route_model import Route
 
 class Place(BaseModel) : 
     id : int
@@ -8,6 +7,12 @@ class Place(BaseModel) :
     zip_code : str
     url_coordinate : str
 
+class Route(BaseModel) : 
+    id : int
+    place1 : Place 
+    place2 : Place
+    price : int
+    duration : int
 
 class PlacewithRoute(BaseModel) : 
     id : int
@@ -19,3 +24,15 @@ class PlacewithRoute(BaseModel) :
 
     class Config:
         orm_mode = True
+
+
+class RoutePlace(BaseModel) : 
+    id : int
+    place2 : Place
+    place2 : Place
+    price : int
+    duration : int
+    
+    class Config:
+        orm_mode = True
+
