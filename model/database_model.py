@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, column
 from sqlalchemy.orm import relationship
 from ..repository.connection import Base 
 
@@ -15,11 +15,11 @@ class User(Base) :
     nation = Column(String)
 
     books = relationship("Book", back_populates="users")
-    payments = relationship("Payment", back_populates="users")
 
 class Place(Base) : 
     __tablename__ = "places"
     id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
     city = Column(String)
     zip_code = Column(String)
     url_coordinate = Column(String)
@@ -39,23 +39,24 @@ class Route(Base) :
     place1 = relationship("Place", back_populates="routes")
     place2 = relationship("Place", back_populates="routes2")
 
+class Payment(Base) : 
+    __tablename__ = "payments"
+    id = Column(Integer, primary_key=True, index=True)
+    total = Column(Integer)
+    payment_date = Column(DateTime)
+
+    books = relationship("Book", back_populates="payments")
 
 class Book(Base) : 
     __tablename__ = "books"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     route_id = Column(Integer, ForeignKey("routes.id"))
-    book_date = Column(DateTime)
+    payment_id = Column(Integer, ForeignKey("payments.id"))
 
     users = relationship("User", back_populates="books")
     routes = relationship("Route", back_populates="books")
+    payments = relationship("Payment", back_populates="books")
 
-class Payment(Base) : 
-    __tablename__ = "payments"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    book_date = Column(DateTime)
-
-    users = relationship("User", back_populates="payments")
 
 
