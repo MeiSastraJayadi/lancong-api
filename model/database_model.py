@@ -1,4 +1,3 @@
-from operator import index
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 from ..repository.connection import Base 
