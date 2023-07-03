@@ -72,7 +72,6 @@ def create_user(db : Session, user : UserRegister) :
             nation = user.nation
             )
 
-    print(user_db)
     db.add(user_db)
     db.commit()
     db.refresh(user_db)
