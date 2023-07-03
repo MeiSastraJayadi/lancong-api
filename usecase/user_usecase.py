@@ -82,7 +82,7 @@ def authenticate_user(username: str, password : str, db : Session) :
     user = get_user(db, username)
     if not user : 
         return False
-    if not verify_password(user.hashed_password, password) : 
+    if not verify_password(str(user.hashed_password), password) : 
         return False
     return user
 
