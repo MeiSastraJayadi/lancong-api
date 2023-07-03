@@ -1,5 +1,4 @@
-from fastapi import APIRouter, HTTPException, Response, responses, status
-from sqlalchemy import delete
+from fastapi import HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from model.database_model import Place
@@ -7,10 +6,10 @@ from model.route_place_model import Place as Pc
 
 def create_place(db : Session, place : Pc) : 
     place_db = Place(
-            name = Pc.name,
-            city = Pc.city, 
-            zip_code = Pc.zip_code,
-            url_coordinate = Pc.url_coordinate
+            name = place.name,
+            city = place.city, 
+            zip_code = place.zip_code,
+            url_coordinate = place.url_coordinate
             )
     db.add(place_db)
     db.commit()
