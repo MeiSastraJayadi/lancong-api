@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from model.database_model import User
-from model.user_model import TokenData, UserRegister, UserInDB
+from model.user_model import TokenData, UserRegister
 
 from passlib.context import CryptContext
 from jose import JWTError, jwt
