@@ -7,6 +7,18 @@ class Place(BaseModel) :
     zip_code : str
     url_coordinate : str
 
+    class Config: 
+        orm_mode = True
+
+class CreatePlace(BaseModel) : 
+    name : str
+    city : str
+    zip_code : str
+    url_coordinate : str
+
+    class Config:
+        orm_mode = True
+
 class Route(BaseModel) : 
     id : int
     place1 : Place 

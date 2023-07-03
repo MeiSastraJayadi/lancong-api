@@ -2,9 +2,9 @@ from fastapi import HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from model.database_model import Place
-from model.route_place_model import Place as Pc
+from model.route_place_model import CreatePlace as Pc  
 
-def create_place(db : Session, place : Pc) : 
+def create_place_usecase(db : Session, place : Pc) : 
     place_db = Place(
             name = place.name,
             city = place.city, 
@@ -51,7 +51,7 @@ def update_place(db : Session, id : int, payload : Pc) :
     place.update(data, synchronize_session=False)
     db.commit()
     db.refresh(place.first())
-    return Response(content=place, status_code=status.HTTP_200_OK)
+    return place.first()
     
     
 
