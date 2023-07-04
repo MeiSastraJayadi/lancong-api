@@ -11,6 +11,7 @@ from jose import JWTError, jwt
 
 import os
 
+from repository.connection import get_db
 
 SECRET_KEY = str(os.getenv("SECRET_KEY"))
 ALGORITHM = "HS256"
@@ -38,7 +39,7 @@ def create_access_token(data : dict, expires_delta : timedelta | None = None) :
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)], db : Session) : 
+async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)], db : Session = Depends(get_db)) : 
     credential_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 
             detail="Could not validated credential",
@@ -55,18 +56,7 @@ async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)], db :
     user = get_user(db, username)
     if user is None : 
         raise credential_exception
-    user_data = UserDetail(
-            name=user["name"],
-            username=user["username"],
-            email=user["email"],
-            phone=user["phone"],
-            is_male=user["is_male"],
-            age=user["age"],
-            card_id=user["card_id"],
-            nation=user["nation"],
-            is_admin=user["is_admin"]
-            )
-    return user_data 
+    return user
 
 def create_user(db : Session, user : UserRegister) : 
     hashed_password = get_password_hashed(user.password)
