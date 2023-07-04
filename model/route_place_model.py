@@ -58,7 +58,6 @@ class CreateRoute(BaseModel) :
 
 
 class RoutePlace(BaseModel) : 
-    id : int
     route_id : int
     place_id : int
     

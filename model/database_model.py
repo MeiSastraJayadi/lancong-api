@@ -19,7 +19,6 @@ class User(Base) :
     is_admin = Column(Boolean, default=False)
 
     books = relationship("Book", back_populates="users")
-    payments = relationship("Payment", back_populates="users")
 
 class Place(Base) : 
     __tablename__ = "places"
@@ -29,7 +28,7 @@ class Place(Base) :
     zip_code = Column(String(50))
     url_coordinate = Column(String(400))
 
-    routes = relationship("RoutePlace", back_populates="places")
+    routes = relationship("Route", secondary="route_places", back_populates="places")
 
 
 class Route(Base) : 
@@ -38,7 +37,7 @@ class Route(Base) :
     price = Column(Integer)
     duration = Column(Integer)
 
-    places = relationship("RoutePlace", back_populates="routes")
+    places = relationship("Place", secondary="route_places", back_populates="routes")
 
     books = relationship("Book", back_populates="routes")
 
@@ -58,7 +57,6 @@ class Book(Base) :
 
     users = relationship("User", back_populates="books")
     routes = relationship("Route", back_populates="books")
-    payments = relationship("Payment", back_populates="books")
 
 
 
