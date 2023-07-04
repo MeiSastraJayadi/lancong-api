@@ -1,3 +1,5 @@
+from enum import IntEnum
+from operator import index
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Null, String, DateTime, column
 from sqlalchemy.orm import relationship
 from repository.connection import Base 
@@ -14,6 +16,7 @@ class User(Base) :
     age = Column(Integer)
     card_id = Column(String(30))
     nation = Column(String(30))
+    is_admin = Column(Boolean, default=False)
 
     books = relationship("Book", back_populates="users")
 
@@ -60,6 +63,7 @@ class Book(Base) :
     users = relationship("User", back_populates="books")
     routes = relationship("Route", back_populates="books")
     payments = relationship("Payment", back_populates="books")
+
 
 
 
