@@ -1,3 +1,4 @@
+from datetime import time
 from typing import List
 from pydantic import BaseModel
 
@@ -15,6 +16,7 @@ class RouteRelation(BaseModel) :
     id : int
     price : int
     duration : int
+    start : time
 
     class Config : 
         orm_mode=True
@@ -45,6 +47,8 @@ class Route(BaseModel) :
     price : int
     duration : int
     places : List[PlaceRelation]
+    start : time
+
 
     class Config : 
         orm_mode=True
@@ -52,6 +56,7 @@ class Route(BaseModel) :
 class CreateRoute(BaseModel) : 
     price : int
     duration : int
+    start : time
 
     class Config : 
         orm_mode = True

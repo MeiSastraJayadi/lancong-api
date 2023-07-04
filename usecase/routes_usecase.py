@@ -28,7 +28,8 @@ def delete_routes(id : int, db : Session) :
 def create_routes(route : CreateRoute, db : Session) : 
     route_db = Route(
             price = route.price,
-            duration = route.duration
+            duration = route.duration, 
+            start = str(route.start).split("+")[0]
             )
     db.add(route_db)
     db.commit()

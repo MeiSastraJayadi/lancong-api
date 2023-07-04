@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
@@ -12,7 +12,7 @@ book_route = APIRouter(
         tags=["Book"]
         )
 
-@book_route.get("", response_model=books_model.Book, status_code=status.HTTP_200_OK)
+@book_route.get("", response_model=List[books_model.Book], status_code=status.HTTP_200_OK)
 def get_all_book(current_user : Annotated[user_model.UserDetail, Depends(get_current_user)], db : Session = Depends(get_db)) : 
     return get_book(current_user.id, db)
 

@@ -1,6 +1,6 @@
 from enum import IntEnum
 from operator import index
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime 
+from sqlalchemy import Boolean, Column, Date, ForeignKey, Integer, String, DateTime, Time 
 from sqlalchemy.orm import relationship
 from repository.connection import Base 
 
@@ -36,6 +36,7 @@ class Route(Base) :
     id = Column(Integer, primary_key=True, index=True)
     price = Column(Integer)
     duration = Column(Integer)
+    start = Column(Time)
 
     places = relationship("Place", secondary="route_places", back_populates="routes")
 
@@ -53,6 +54,7 @@ class Book(Base) :
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     route_id = Column(Integer, ForeignKey("routes.id"))
+    start_date = Column(Date)
     date = Column(DateTime)  
 
     users = relationship("User", back_populates="books")
