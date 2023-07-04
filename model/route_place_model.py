@@ -60,7 +60,7 @@ class CreateRoute(BaseModel) :
 class RoutePlace(BaseModel) : 
     id : int
     route_id : int
-    palce_id : int
+    place_id : int
     
     class Config:
         orm_mode = True
