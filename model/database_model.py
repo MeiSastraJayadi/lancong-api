@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, column
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, Null, String, DateTime, column
 from sqlalchemy.orm import relationship
 from repository.connection import Base 
 
@@ -53,7 +53,9 @@ class Book(Base) :
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     route_id = Column(Integer, ForeignKey("routes.id"))
-    payment_id = Column(Integer, ForeignKey("payments.id"))
+    payment_id = Column(Integer, ForeignKey("payments.id"), nullable=True)
+    is_paid = Column(Boolean, default=False)
+    book_date = Column(DateTime)
 
     users = relationship("User", back_populates="books")
     routes = relationship("Route", back_populates="books")
