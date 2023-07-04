@@ -17,8 +17,14 @@ def get_all_place(db : Session = Depends(get_db)):
     return get_all_places(db)
 
 @place_router.post("", status_code=status.HTTP_201_CREATED, response_model=place_model.Place)
-def create_place(current_user : Annotated[user_model.UserDetail, Depends(get_current_user)], payload : place_model.CreatePlace, db : Session = Depends(get_db)) : 
-    if not current_user.is_admin : 
+def create_place(current_user : Annotated[None, Depends(get_current_user)], payload : place_model.CreatePlace, db : Session = Depends(get_db)) : 
+    if current_user != None : 
+        if not current_user.is_admin : 
+            raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, 
+                    detail="The user is not an admin"
+                    )
+    else :
         raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, 
                 detail="The user is not an admin"
