@@ -26,6 +26,9 @@ class Route(BaseModel) :
     price : int
     duration : int
 
+    class Config : 
+        orm_mode=True
+
 class CreateRoute(BaseModel) : 
     place1 : int 
     place2 : int 
