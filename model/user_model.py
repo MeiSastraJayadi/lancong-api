@@ -26,6 +26,7 @@ class UserDetail(BaseModel) :
     age : int
     card_id : str
     nation : str 
+    is_admin : bool
 
     class Config:
         orm_mode = True

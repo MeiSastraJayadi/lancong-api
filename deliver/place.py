@@ -1,9 +1,11 @@
-from typing import List
+from typing import Annotated, List
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from model import route_place_model as place_model
+from model import user_model 
 from repository.connection import get_db
 from usecase.place_usecase import create_place_usecase, delete_place, get_all_places, update_place
+from usecase.user_usecase import get_current_user
 
 place_router = APIRouter(
         prefix="/place",
@@ -15,7 +17,7 @@ def get_all_place(db : Session = Depends(get_db)):
     return get_all_places(db)
 
 @place_router.post("", status_code=status.HTTP_201_CREATED, response_model=place_model.Place)
-def create_place(payload : place_model.CreatePlace, db : Session = Depends(get_db)) : 
+def create_place(current_user : Annotated[user_model.UserDetail, get_current_user], payload : place_model.CreatePlace, db : Session = Depends(get_db)) : 
     data = create_place_usecase(db, payload)
     return data
 
