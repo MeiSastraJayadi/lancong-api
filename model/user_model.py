@@ -18,6 +18,7 @@ class UserRegister(BaseModel) :
 
 
 class UserDetail(BaseModel) : 
+    id : int 
     name : str
     username : str
     email : str
