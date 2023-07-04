@@ -21,9 +21,6 @@ async def login(form_data : Annotated[OAuth2PasswordRequestForm, Depends()], db 
     token = login_for_token(form_data, db)
     return token
 
-@user_router.get("/items/")
-async def read_items(token: Annotated[str, Depends(oauth2_schemes)]):
-    return {"token": token}
 
     
 

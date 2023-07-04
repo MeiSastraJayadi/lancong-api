@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from model.database_model import User
-from model.user_model import TokenData, UserRegister
+from model.user_model import TokenData, UserDetail, UserRegister
 
 from passlib.context import CryptContext
 from jose import JWTError, jwt
@@ -55,7 +55,18 @@ async def get_current_user(token : Annotated[str, Depends(oauth2_schemes)], db :
     user = get_user(db, username)
     if user is None : 
         raise credential_exception
-    return user
+    user_data = UserDetail(
+            name=user["name"],
+            username=user["username"],
+            email=user["email"],
+            phone=user["phone"],
+            is_male=user["is_male"],
+            age=user["age"],
+            card_id=user["card_id"],
+            nation=user["nation"],
+            is_admin=user["is_admin"]
+            )
+    return user_data 
 
 def create_user(db : Session, user : UserRegister) : 
     hashed_password = get_password_hashed(user.password)
