@@ -13,11 +13,11 @@ place_router = APIRouter(
         )
 
 @place_router.get("", status_code=status.HTTP_200_OK, response_model=List[place_model.Place])
-def get_all_place(db : Session = Depends(get_db)):
+def get_all_place(current_user : Annotated[user_model.UserDetail, Depends(get_current_user)], db : Session = Depends(get_db)):
     return get_all_places(db)
 
 @place_router.get("/{id}", status_code=status.HTTP_200_OK, response_model=place_model.Place)
-def get_all_place_with_id(id : int, db : Session = Depends(get_db)) : 
+def get_all_place_with_id(current_user : Annotated[user_model.UserDetail, Depends(get_current_user)], id : int, db : Session = Depends(get_db)) : 
     return get_places_by_id(db, id)
 
 
