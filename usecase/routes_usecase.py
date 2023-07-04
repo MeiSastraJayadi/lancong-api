@@ -26,11 +26,7 @@ def delete_routes(id : int, db : Session) :
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 def create_routes(route : CreateRoute, db : Session) : 
-    _ = find_place(db, route.place1_id)
-    _ = find_place(db, route.place2_id)
     route_db = Route(
-            place1_id = route.place1_id,
-            place2_id = route.place2_id,
             price = route.price,
             duration = route.duration
             )
@@ -40,8 +36,6 @@ def create_routes(route : CreateRoute, db : Session) :
     return route_db
 
 def update_routes(payload : CreateRoute, id : int, db : Session) : 
-    _ = find_place(db, payload.place1_id)
-    _ = find_place(db, payload.place2_id)
     route = find_routes(id, db)
     data = payload.dict(exclude_unset=True)
     print(data)

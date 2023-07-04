@@ -1,6 +1,6 @@
 from enum import IntEnum
 from operator import index
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, Null, String, DateTime, column
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime 
 from sqlalchemy.orm import relationship
 from repository.connection import Base 
 
@@ -19,6 +19,7 @@ class User(Base) :
     is_admin = Column(Boolean, default=False)
 
     books = relationship("Book", back_populates="users")
+    payments = relationship("Payment", back_populates="users")
 
 class Place(Base) : 
     __tablename__ = "places"
@@ -27,38 +28,33 @@ class Place(Base) :
     city = Column(String(30))
     zip_code = Column(String(50))
     url_coordinate = Column(String(400))
-    
-    # routes = relationship("Route", back_populates="place1")
-    # routes2 = relationship("Route", back_populates="place2")
+
+    routes = relationship("RoutePlace", back_populates="places")
+
 
 class Route(Base) : 
     __tablename__ = "routes"
     id = Column(Integer, primary_key=True, index=True)
-    place1_id = Column(Integer, ForeignKey("places.id"))
-    place2_id = Column(Integer, ForeignKey("places.id"))
     price = Column(Integer)
     duration = Column(Integer)
 
+    places = relationship("RoutePlace", back_populates="routes")
+
     books = relationship("Book", back_populates="routes")
-    place1 = relationship("Place", foreign_keys=[place1_id])
-    place2 = relationship("Place", foreign_keys=[place2_id])
 
-class Payment(Base) : 
-    __tablename__ = "payments"
+
+class RoutePlace(Base) : 
+    __tablename__ = "route_places"
     id = Column(Integer, primary_key=True, index=True)
-    total = Column(Integer)
-    payment_date = Column(DateTime)
-
-    books = relationship("Book", back_populates="payments")
+    route_id = Column(Integer, ForeignKey("routes.id"))
+    place_id = Column(Integer, ForeignKey("places.id"))
 
 class Book(Base) : 
     __tablename__ = "books"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     route_id = Column(Integer, ForeignKey("routes.id"))
-    payment_id = Column(Integer, ForeignKey("payments.id"), nullable=True)
-    is_paid = Column(Boolean, default=False)
-    book_date = Column(DateTime)
+    date = Column(DateTime)  
 
     users = relationship("User", back_populates="books")
     routes = relationship("Route", back_populates="books")
