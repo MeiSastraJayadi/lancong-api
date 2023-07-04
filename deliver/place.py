@@ -1,5 +1,5 @@
 from typing import Annotated, List
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from model import route_place_model as place_model
 from model import user_model 
@@ -18,6 +18,11 @@ def get_all_place(db : Session = Depends(get_db)):
 
 @place_router.post("", status_code=status.HTTP_201_CREATED, response_model=place_model.Place)
 def create_place(current_user : Annotated[user_model.UserDetail, get_current_user], payload : place_model.CreatePlace, db : Session = Depends(get_db)) : 
+    if not current_user.is_admin : 
+        raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, 
+                detail="The user is not an admin"
+                )
     data = create_place_usecase(db, payload)
     return data
 
