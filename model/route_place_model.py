@@ -30,8 +30,8 @@ class Route(BaseModel) :
         orm_mode=True
 
 class CreateRoute(BaseModel) : 
-    place1 : int 
-    place2 : int 
+    place1_id : int 
+    place2_id : int 
     price : int
     duration : int
 
